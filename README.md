@@ -32,7 +32,7 @@ Poniżej znajdują się zrzuty ekranu aplikacji:
 ### Strona główna
 ![Strona główna](src/main_view.jpg)
 
-### Przesyłanie plików
+### Eytowanie plików
 ![Edytowanie danych](src/edit_view1.jpg)
 
 ### Opisy plików
