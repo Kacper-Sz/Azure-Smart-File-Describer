@@ -1,0 +1,107 @@
+﻿@model IEnumerable<BlobObject>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container" style="padding-top: 24px">
+    <div class="row">
+        <div class="col-sm-8">
+            <form action="/Home/Upload" method="post" enctype="multipart/form-data">
+                <input type="file" name="file" id="upload" style="display:none" onchange="$('#submit').click();" />
+                <input type="button" value="Prześlij plik" class="btn btn-primary btn-lg" onclick="$('#upload').click();" />
+                <input type="submit" id="submit" style="display:none" />
+            </form>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-sm 12">
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">@TempData["Error"]</div>
+            }
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">@TempData["Success"]</div>
+            }
+            
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>Przesłane pliki:</h3>
+                <div class="btn-group" role="group">
+                    <a href="/Home/Index?sortOrder=@ViewBag.NameSortParam" 
+                       class="btn btn-sm @(string.IsNullOrEmpty(ViewBag.CurrentSort) || ViewBag.CurrentSort == "name_desc" ? "btn-primary" : "btn-outline-primary")">
+                        <i class="bi bi-sort-alpha-down"></i> Nazwa 
+                        @if (string.IsNullOrEmpty(ViewBag.CurrentSort))
+                        {
+                            <span>↑</span>
+                        }
+                        else if (ViewBag.CurrentSort == "name_desc")
+                        {
+                            <span>↓</span>
+                        }
+                    </a>
+                    <a href="/Home/Index?sortOrder=@ViewBag.DateSortParam" 
+                       class="btn btn-sm @(ViewBag.CurrentSort == "date" || ViewBag.CurrentSort == "date_desc" ? "btn-primary" : "btn-outline-primary")">
+                        <i class="bi bi-calendar"></i> Data 
+                        @if (ViewBag.CurrentSort == "date")
+                        {
+                            <span>↑</span>
+                        }
+                        else if (ViewBag.CurrentSort == "date_desc")
+                        {
+                            <span>↓</span>
+                        }
+                    </a>
+                </div>
+            </div>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nazwa</th>
+                        <th>Typ</th>
+                        <th>Rozmiar</th>
+                        <th>Opis</th>
+                        <th>Podgląd</th>
+                        <th>Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var blob in ViewBag.Blobs)
+                    {
+                        <tr>
+                            <td>@blob.Name</td>
+                            <td>@blob.ContentType</td>
+                            <td>
+                                @{
+                                    var sizeInKB = blob.FileSizeBytes != null ? (blob.FileSizeBytes / 1024.0).ToString("F2") + " KB" : "N/A";
+                                }
+                                @sizeInKB
+                            </td>
+                            <td>@blob.Description</td>
+                            <td>
+                                @if (blob.ContentType?.StartsWith("image/") == true)
+                                {
+                                    <a href="@blob.FileUri" target="_blank">
+                                        <img src="@blob.FileUri" alt="@blob.Name" style="max-width: 100px; max-height: 100px;" />
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="@blob.FileUri" target="_blank" class="btn btn-sm btn-info">Podgląd</a>
+                                }
+                            </td>
+                            <td>
+                                <a href="/Home/Edit?name=@blob.BlobName" class="btn btn-sm btn-warning">Edytuj</a>
+                                <a href="/Home/Delete?name=@blob.BlobName" 
+                                   class="btn btn-sm btn-danger" 
+                                   onclick="return confirm('Czy na pewno chcesz usunąć ten plik?');">Usuń</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

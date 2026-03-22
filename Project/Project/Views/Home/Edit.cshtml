@@ -1,0 +1,88 @@
+@model FileMetadata
+@{
+    ViewData["Title"] = "Edycja pliku";
+}
+
+<div class="container" style="padding-top: 24px">
+    <h2>Edycja pliku</h2>
+    <hr />
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <h4>Podgl¹d:</h4>
+    @if (Model.ContentType?.StartsWith("image/") == true)
+    {
+        <a href="@Model.FileUri" target="_blank">
+            <img src="@Model.FileUri" alt="@Model.FileName" style="max-width: 500px;" class="img-thumbnail" />
+        </a>
+        <p class="text-muted mt-2">Kliknij na obraz, aby otworzyæ w nowej karcie</p>
+    }
+    else
+    {
+        <a href="@Model.FileUri" target="_blank" class="btn btn-info">
+            <i class="bi bi-download"></i> Otwórz plik: @Model.FileName
+        </a>
+        <p class="text-muted mt-2">Typ pliku: @Model.ContentType</p>
+    }
+
+    <hr />
+
+    <div class="alert alert-info">
+        <strong>Uwaga:</strong> Pola oznaczone z szarym t³em s¹ typem jako "niezmienialny" - dane te nie mog¹ byæ zmienione.
+    </div>
+
+    <form action="/Home/Edit" method="post">
+        <input type="hidden" name="Id" value="@Model.Id" />
+        <input type="hidden" name="BlobName" value="@Model.BlobName" />
+        <input type="hidden" name="FileUri" value="@Model.FileUri" />
+        <input type="hidden" name="UploadDate" value="@Model.UploadDate" />
+        <input type="hidden" name="FileSizeBytes" value="@Model.FileSizeBytes" />
+        <input type="hidden" name="ContentType" value="@Model.ContentType" />
+        <input type="hidden" name="FileExtension" value="@Model.FileExtension" />
+        <input type="hidden" name="Category" value="@Model.Category" />
+
+        <div class="form-group mb-3">
+            <label class="form-label">Nazwa w Blob Storage</label>
+            <input value="@Model.BlobName" class="form-control" disabled />
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label">Nazwa wyœwietlana</label>
+            <input name="FileName" value="@Model.FileName" class="form-control" />
+            <small class="text-muted">To jest nazwa, która bêdzie pokazywana u¿ytkownikom</small>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label">Opis</label>
+            <textarea name="Description" class="form-control" rows="3">@Model.Description</textarea>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label">Rozszerzenie</label>
+            <input value="@Model.FileExtension" class="form-control" disabled />
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label">Kategoria</label>
+            <input value="@Model.Category" class="form-control" disabled />
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label">Typ pliku</label>
+            <input value="@Model.ContentType" class="form-control" disabled />
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label">Data przes³ania</label>
+            <input value="@Model.UploadDate.ToString("yyyy-MM-dd HH:mm:ss")" class="form-control" disabled />
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+            <a href="/Home/Index" class="btn btn-secondary">Anuluj</a>
+        </div>
+    </form>
+</div>
