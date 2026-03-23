@@ -43,7 +43,7 @@ Poniżej znajdują się zrzuty ekranu aplikacji:
 ### Wymagania wstępne
 
 - .NET 8.0 SDK
-- Konto Azure z skonfigurowanymi usługami Blob Storage, Cosmos DB i AI
+- Konto Azure z skonfigurowanymi usługami Blob Storage, Cosmos DB, Computer Vision oraz Document Intelligence
 
 ### Konfiguracja
 
